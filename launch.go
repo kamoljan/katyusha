@@ -8,9 +8,12 @@ import (
 	"mime/multipart"
 	"net/http"
 	"os"
+	"time"
 )
 
-func Upload(url, file string) (err error) {
+type Result struct{ time float64 }
+
+func upload(url, file string) (err error) {
 	// Prepare a form that you will submit to that URL.
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
@@ -59,6 +62,18 @@ func Upload(url, file string) (err error) {
 	return
 }
 
+func lauchOneRocket(i int, file string) {
+	t0 := time.Now()
+	err := upload("http://127.0.0.1:9090", file)
+	t1 := time.Now()
+	if err == nil {
+		fmt.Printf("%d rocket launched from %v\n", i, file)
+		fmt.Printf("%v time\n", t1.Sub(t0))
+	} else {
+		fmt.Printf("%d rocket failed from %v with err = %v\n", i, file, err)
+	}
+}
+
 func main() {
 	file, err := os.Open("rockets.txt")
 	if err != nil {
@@ -67,8 +82,15 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
+	i := 0
 	for scanner.Scan() {
-		err := Upload("http://localhost:9090", file)
-		fmt.Println(scanner.Text())
+		i = i + 1
+		if i < 1000 {
+			go lauchOneRocket(i, scanner.Text())
+		}
 	}
+
+	var input string
+	fmt.Scanln(&input)
+	fmt.Println("done")
 }
