@@ -11,8 +11,10 @@ cmd="ab -e output.csv -n $REQUESTS -c $CONCURRENCY $URL"
 echo $cmd
 ${cmd}
 sed 1d output.csv > stats.csv
+rm output.csv
+#set terminal png font "/Library/Fonts/Times\ New\ Roman.ttf" 14; \
 echo '\
-set terminal png font "/Library/Fonts/Times\ New\ Roman.ttf" 14; \
+set terminal png; \
 set output "get_'$REQUESTS'_'$CONCURRENCY'.jpg"; \
 set datafile separator ","; \
 set title "'$REQUESTS' requests with '$CONCURRENCY' concurrent connections"; \
