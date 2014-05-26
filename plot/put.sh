@@ -8,8 +8,8 @@ echo 'Concurrency ' $CONCURRENCY
 # set title  "'$CONCURRENCY' concurrent connections"; \
 echo '\
 set terminal png font "/Library/Fonts/Times\ New\ Roman.ttf" 14; \
-set output "'$CONCURRENCY'"; \
+set output "'$CONCURRENCY'.jpg"; \
 set datafile separator ","; \
 set xlabel "Concurrent connections"; \
 set ylabel "Response time (milliseconds)"; \
-plot "stats'$CONCURRENCY'.csv" notitle' | gnuplot -persist
+plot "'$CONCURRENCY'" notitle' | gnuplot -persist
